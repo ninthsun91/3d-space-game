@@ -2,6 +2,7 @@ import './App.css'
 import {} from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Perf }  from 'r3f-perf';
+import { Lights } from './Lights';
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
     <>
       <Canvas>
         <Perf debug />
+        <Lights />
       </Canvas>
     </>
   )
