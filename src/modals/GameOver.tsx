@@ -8,9 +8,9 @@ type GameOverModalProps = {
 
 export function GameOverModal({ restart }: GameOverModalProps) {
   const { isGameOver, elapsedTime, init } = useStatusStore();
-  const [isOpen, setIsOpen] = useState(isGameOver);
+  const [isOpen, setIsOpen] = useState<boolean>(isGameOver);
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
     init();
     restart();

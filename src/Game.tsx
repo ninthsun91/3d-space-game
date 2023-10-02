@@ -2,17 +2,31 @@ import { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
-import { Perf }  from 'r3f-perf';
+// import { Perf }  from 'r3f-perf';
 
 import { Lane, Lights, Player, Rocks, Stars, Walls } from './three';
+import { useStatusStore } from './store';
 
-export function Game() {
+type GameProps = {
+  start: boolean;
+}
+
+export function Game({ start }: GameProps) {
+  const { init } = useStatusStore();
   const [bgm] = useState(() => new Audio('/space.wav'));
+  
+  useEffect(() => {
+    if (start) {
+      bgm.play();
+      init();
+    } else {
+      bgm.pause();
+    }
+  }, [start]);
   
   useEffect(() => {
     bgm.loop = true;
     bgm.volume = 1;
-    bgm.play();
   }, []);
 
   return (
@@ -29,9 +43,11 @@ export function Game() {
           fov: 105,
           near: 0.1,
           far: 10000,
+          position: [ 0, 7, 10 ],
+          lookAt: () => [ 0, 0, -50 ],
         }}
       >
-        <Perf debug />
+        {/* <Perf debug /> */}
         <Lights />
 
         <Stars />
@@ -43,8 +59,8 @@ export function Game() {
         >
           <Walls />
 
-          <Player />
-          <Rocks />
+          {start && <Player />}
+          {start && <Rocks />}
         </Physics>
       </Canvas>
     </KeyboardControls>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Game } from './Game';
-import { GameOverModal } from './modals';
+import { GameOverModal, GameStartModal } from './modals';
 
 function App() {
-  const [start, setStart] = useState(true);
+  const [start, setStart] = useState(false);
 
   const restart = () => {
     setStart(false);
@@ -12,9 +12,10 @@ function App() {
 
   return (
     <>
+      <GameStartModal start={() => setStart(true)} />
       <GameOverModal restart={restart} />
 
-      {start && <Game />}
+      <Game start={start} />
     </>
   )
 }
