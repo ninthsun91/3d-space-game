@@ -1,6 +1,7 @@
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 
-const LENGTH = 50
+const WIDTH = 50
+const LENGTH = 1000;
 
 type Props = {
   position: [number, number, number];
@@ -10,10 +11,10 @@ type Props = {
 export function Walls() {
   return (
     <>
-      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, LENGTH, 0]} />
-      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, -LENGTH, 0]} />
-      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[LENGTH, 0, 0]} />
-      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[-LENGTH, 0, 0]} />
+      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, WIDTH, -LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, -WIDTH, -LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[WIDTH, 0, -LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[-WIDTH, 0, -LENGTH]} />
     </>
   );
 }
@@ -27,7 +28,7 @@ function Wall({ rotation, position }: Props) {
       rotation={rotation}
       position={position}
     >
-      <CuboidCollider args={[LENGTH, 1000, 0.01]}/>
+      <CuboidCollider args={[WIDTH, LENGTH, 0.01]} />
     </RigidBody>
   );
 }

@@ -12,7 +12,7 @@ declare module '@react-three/fiber' {
 const laneGeometry = new THREE.PlaneGeometry(0.1, 2);
 const laneMaterial = new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide, emissive: 'white', emissiveIntensity: 1 });
 
-const LANE_COUNT = 100;
+const LANE_COUNT = 1330;
 
 export function Lane() {
   const lanes = useRef<THREE.InstancedMesh>(null!);
@@ -30,8 +30,6 @@ export function Lane() {
       );
       lanes.current.setMatrixAt(i, matrix);
     }
-
-    console.log(lanes.current);
   }, []);
 
   return (
