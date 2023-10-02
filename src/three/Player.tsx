@@ -113,8 +113,12 @@ export function Player() {
       ship.collider(0) as any,   // force type due to pnpm bug
       translation,
     );
-    const correctTranslation = controller.computedMovement();
-    ship.setNextKinematicTranslation(correctTranslation);
+    const collision = controller.computedCollision(0);
+    if (collision && collision.toi < 1) {
+      translation.copy(shipPosition);
+    }
+
+    ship.setNextKinematicTranslation(translation);
     ship.setNextKinematicRotation(rotation);
 
     setShipPosition(getShipPosition(ship));
@@ -122,7 +126,7 @@ export function Player() {
 
   // Initial Loading
   useEffect(() => {
-    const characterController = world.createCharacterController(0.01);
+    const characterController = world.createCharacterController(0.0001);
     controllerRef.current = characterController as any;
     
     return () => {
