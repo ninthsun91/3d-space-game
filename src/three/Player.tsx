@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { useGLTF, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import { useShipStore } from '../store';
 
 const shouldRotate = (rotate: number) => {
   return Math.abs(rotate) < Math.PI * 0.25;
@@ -16,6 +17,8 @@ export function Player() {
   const exhaustRef1 = useRef<THREE.Mesh>(null!);
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
 
+  const { setShipPosition, setCameraPosition } = useShipStore();
+
   // Camera
   useFrame((state) => {
     const ship = shipRef.current;
@@ -26,6 +29,8 @@ export function Player() {
     cameraPosition.y += 5;
     state.camera.position.copy(cameraPosition);
     state.camera.lookAt(ship.position);
+
+    setCameraPosition(cameraPosition);
   });
   
   // Exhaust animation
@@ -39,7 +44,7 @@ export function Player() {
     exhaustRef2.current.scale.y = scale2;
   });
 
-  // Key Mapping
+  // Ship Movement
   const [_, getKeys] = useKeyboardControls();
   useFrame((_, delta) => {
     const ship = shipRef.current;
@@ -94,6 +99,7 @@ export function Player() {
     }
 
     ship.position.add(force);
+    setShipPosition(ship.position);
   });
 
   return (
