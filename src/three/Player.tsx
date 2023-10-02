@@ -25,7 +25,7 @@ export function Player() {
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
   const controllerRef = useRef<KinematicCharacterController>(null!);
 
-  const { setShipPosition, setCameraPosition, setGameOver } = useStatusStore();
+  const { isGameOver, setShipPosition, setCameraPosition, setGameOver } = useStatusStore();
   const { world } = useRapier();
   const { clock } = useThree();
 
@@ -62,6 +62,12 @@ export function Player() {
   useFrame((state, delta) => {
     const ship = shipRef.current;
     const shipPosition = getShipPosition(ship);
+
+    if (isGameOver) {
+      ship.setNextKinematicTranslation(shipPosition);
+      return;
+    }
+
     const rotation = ship.rotation();
     const speed = INITIAL_SPEED + (state.clock.elapsedTime * 0.001);
 

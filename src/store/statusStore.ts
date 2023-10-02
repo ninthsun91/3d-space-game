@@ -62,12 +62,16 @@ export const useStatusStore = create<StatusStore>((set) => ({
       }
     }
   })),
-  setGameOver: (elapsedTime: number, { x, y, z }: THREE.Vector3) => set(() => ({
-    elapsedTime,
-    isGameOver: true,
-    ship: {
-      position: { x, y, z }
-    },
-    distance: Math.sqrt(x**2 + y**2 + z**2),
-  })),
+  setGameOver: (elapsedTime: number, { x, y, z }: THREE.Vector3) => set(({ isGameOver }) => {
+    if (isGameOver) return {};
+
+    return {
+      elapsedTime,
+      isGameOver: true,
+      ship: {
+        position: { x, y, z }
+      },
+      distance: Math.sqrt(x**2 + y**2 + z**2),
+    }
+  }),
 }));
