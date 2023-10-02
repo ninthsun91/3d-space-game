@@ -15,6 +15,8 @@ const getShipPosition = (ship: RapierRigidBody) => {
   return new THREE.Vector3(x, y, z);
 }
 
+const INITIAL_SPEED = 0.1;
+
 export function Player() {
   const shipModel = useGLTF('ship.gltf');
   
@@ -54,14 +56,16 @@ export function Player() {
 
   // Ship Movement
   const [_, getKeys] = useKeyboardControls();
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const ship = shipRef.current;
     const shipPosition = getShipPosition(ship);
     const rotation = ship.rotation();
+    const speed = INITIAL_SPEED + (state.clock.elapsedTime * 0.001);
+
     const { forward, backward, left, right } = getKeys();
 
     const translation = new THREE.Vector3(...shipPosition);
-    // const force = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z + delta * -1);
+    // const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
     const distance = delta * 10;
     const degree = Math.PI * delta;
 
