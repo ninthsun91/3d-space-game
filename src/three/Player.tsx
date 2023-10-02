@@ -1,34 +1,42 @@
 import * as THREE from 'three'
-import { useRef } from 'react'
-import { useGLTF, useKeyboardControls } from '@react-three/drei'
+import { useEffect, useRef } from 'react'
+import { OrbitControls, useGLTF, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber';
-import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import { CuboidCollider, RapierRigidBody, RigidBody, useRapier } from '@react-three/rapier';
+import { KinematicCharacterController } from '@dimforge/rapier3d';
 import { useShipStore } from '../store';
 
 const shouldRotate = (rotate: number) => {
-  return Math.abs(rotate) < Math.PI * 0.25;
+  return Math.abs(rotate) < Math.PI * 0.1;
+}
+
+const getShipPosition = (ship: RapierRigidBody) => {
+  const { x, y, z } = ship.translation();
+  return new THREE.Vector3(x, y, z);
 }
 
 export function Player() {
   const shipModel = useGLTF('ship.gltf');
-
-  const shipRef = useRef<THREE.Group>(null!);
-  const shipPhysicsRef = useRef<RapierRigidBody>(null!);
+  
+  const shipRef = useRef<RapierRigidBody>(null!);
   const exhaustRef1 = useRef<THREE.Mesh>(null!);
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
+  const controllerRef = useRef<KinematicCharacterController>(null!);
 
   const { setShipPosition, setCameraPosition } = useShipStore();
+  const { world } = useRapier();
 
   // Camera
   useFrame((state) => {
     const ship = shipRef.current;
+    const shipPosition = getShipPosition(ship);
 
     const cameraPosition = new THREE.Vector3();
-    cameraPosition.copy(ship.position);
+    cameraPosition.copy(shipPosition);
     cameraPosition.z += 10;
     cameraPosition.y += 5;
     state.camera.position.copy(cameraPosition);
-    state.camera.lookAt(ship.position);
+    state.camera.lookAt(shipPosition);
 
     setCameraPosition(cameraPosition);
   });
@@ -48,66 +56,88 @@ export function Player() {
   const [_, getKeys] = useKeyboardControls();
   useFrame((_, delta) => {
     const ship = shipRef.current;
+    const shipPosition = getShipPosition(ship);
+    const rotation = ship.rotation();
     const { forward, backward, left, right } = getKeys();
 
-    const force = new THREE.Vector3(0, 0, delta * -1);
+    const translation = new THREE.Vector3(...shipPosition);
+    // const force = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z + delta * -1);
     const distance = delta * 10;
     const degree = Math.PI * delta;
 
     switch (true) {
       case forward: {
-        force.y += distance;
-        const rotate = ship.rotation.x + degree;
+        translation.y += distance;
+        const rotate = rotation.x + degree;
         if (shouldRotate(rotate)) {
-          ship.rotation.x = rotate;
+          rotation.x = rotate;
         }
         break;
       } case backward: {
-        force.y -= distance;
-        const rotate = ship.rotation.x - degree;
+        translation.y -= distance;
+        const rotate = rotation.x - degree;
         if (shouldRotate(rotate)) {
-          ship.rotation.x = rotate;
+          rotation.x = rotate;
         }
         break;
       } case left: {
-        force.x -= distance;
-        const rotate = ship.rotation.z + degree;
+        translation.x -= distance;
+        const rotate = rotation.z + degree;
         if (shouldRotate(rotate)) {
-          ship.rotation.z = rotate;
+          rotation.z = rotate;
         }
         break;
       } case right: {
-        force.x += distance;
-        const rotate = ship.rotation.z - degree;
+        translation.x += distance;
+        const rotate = rotation.z - degree;
         if (shouldRotate(rotate)) {
-          ship.rotation.z = rotate;
+          rotation.z = rotate;
         }
         break;
       } default:
-        if (ship.rotation.z < -delta) {
-          ship.rotation.z += Math.PI * delta;
-        } else if (ship.rotation.z > delta) {
-          ship.rotation.z -= Math.PI * delta;
+        if (Math.abs(rotation.z) > delta * 1.1) {
+          rotation.z -= Math.PI * delta * Math.sign(rotation.z);
         }
-
-        if (ship.rotation.x < -delta) {
-          ship.rotation.x += Math.PI * delta;
-        } else if (ship.rotation.x > delta) {
-          ship.rotation.x -= Math.PI * delta;
+        if (Math.abs(rotation.x) > delta * 1.1) {
+          rotation.x -= Math.PI * delta * Math.sign(rotation.x);
         }
         break;
     }
 
-    ship.position.add(force);
-    setShipPosition(ship.position);
+    const controller = controllerRef.current;
+    controller.computeColliderMovement(
+      ship.collider(0) as any,   // force type due to pnpm bug
+      translation,
+    );
+    const correctTranslation = controller.computedMovement();
+    ship.setNextKinematicTranslation(correctTranslation);
+    ship.setNextKinematicRotation(rotation);
+
+    setShipPosition(getShipPosition(ship));
   });
+
+  // Initial Loading
+  useEffect(() => {
+    const characterController = world.createCharacterController(0.01);
+    controllerRef.current = characterController as any;
+    
+    return () => {
+      world.removeCharacterController(characterController);
+    }
+  }, []);
 
   return (
     <>
-      <group ref={shipRef}>
-        <RigidBody ref={shipPhysicsRef} type="kinematicPosition">
-          <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
-        </RigidBody>
+      <OrbitControls />
+
+      <RigidBody ref={shipRef}
+        type="kinematicPosition"
+        colliders={false}
+        onCollisionEnter={() => console.log('collision')}
+        onIntersectionEnter={() => console.log('intersection')}
+      >
+        <CuboidCollider args={[1, 1, 1]} />
+        <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
 
         <group>
           <mesh ref={exhaustRef1} scale={[1, 1, 3]} position={[0, 0.65, 2.85]}>
@@ -119,7 +149,7 @@ export function Player() {
             <meshStandardMaterial color="white" emissive="orange" emissiveIntensity={1} toneMapped={false} />
           </mesh>
         </group>
-      </group>
+      </RigidBody>
     </>
-  )
+  );
 }
