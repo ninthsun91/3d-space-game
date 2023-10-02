@@ -4,6 +4,8 @@ import { Canvas } from '@react-three/fiber'
 import { Perf }  from 'r3f-perf';
 import { Lights } from './Lights';
 import { Stars } from './Stars';
+import { Lane } from './Lane';
+import { OrbitControls } from '@react-three/drei';
 
 function App() {
 
@@ -17,8 +19,10 @@ function App() {
       >
         <Perf debug />
         <Lights />
+        <OrbitControls />
 
         <Stars />
+        <Lane />
       </Canvas>
     </>
   )
