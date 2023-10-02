@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { create } from 'zustand';
 
 type StatusState = {
+  elapsedTime: number;
+  distance: number;
+  isGameOver: boolean;
   ship: {
     position: {
       x: number;
@@ -21,9 +24,13 @@ type StatusState = {
 interface StatusStore extends StatusState {
   setShipPosition: (position: THREE.Vector3) => void;
   setCameraPosition: (position: THREE.Vector3) => void;
+  setGameOver: (elapsedTime: number, position: THREE.Vector3) => void;
 }
 
 const statusStoreInit: StatusState = {
+  elapsedTime: 0,
+  distance: 0,
+  isGameOver: false,
   ship: {
     position: {
       x: 0,
@@ -42,12 +49,11 @@ const statusStoreInit: StatusState = {
 
 export const useStatusStore = create<StatusStore>((set) => ({
   ...statusStoreInit,
-  setShipPosition: (position: THREE.Vector3) => set(() => ({
+  setShipPosition: ({ x, y, z }: THREE.Vector3) => set(() => ({
     ship: {
-      position: {
-        ...position,
-      }
-    }
+      position: { x, y, z}
+    },
+    distance: Math.sqrt(x**2 + y**2 + z**2),
   })),
   setCameraPosition: (position: THREE.Vector3) => set(() => ({
     camera: {
@@ -55,5 +61,13 @@ export const useStatusStore = create<StatusStore>((set) => ({
         ...position,
       }
     }
+  })),
+  setGameOver: (elapsedTime: number, { x, y, z }: THREE.Vector3) => set(() => ({
+    elapsedTime,
+    isGameOver: true,
+    ship: {
+      position: { x, y, z }
+    },
+    distance: Math.sqrt(x**2 + y**2 + z**2),
   })),
 }));

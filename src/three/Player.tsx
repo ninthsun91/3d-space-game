@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { OrbitControls, useGLTF, useKeyboardControls } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { CollisionEnterPayload, CuboidCollider, RapierRigidBody, RigidBody, useRapier } from '@react-three/rapier';
 import { KinematicCharacterController } from '@dimforge/rapier3d';
 import { useStatusStore } from '../store';
@@ -25,8 +25,9 @@ export function Player() {
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
   const controllerRef = useRef<KinematicCharacterController>(null!);
 
-  const { setShipPosition, setCameraPosition } = useStatusStore();
+  const { setShipPosition, setCameraPosition, setGameOver } = useStatusStore();
   const { world } = useRapier();
+  const { clock } = useThree();
 
   // Camera
   useFrame((state) => {
@@ -138,6 +139,9 @@ export function Player() {
     const name = collision.colliderObject?.name;
     if (name === 'rock') {
       console.log('GAME OVER');
+      const elapsedTime = clock.getElapsedTime();
+      const position = getShipPosition(shipRef.current);
+      setGameOver(elapsedTime, position);
     }
   }
 
