@@ -141,7 +141,6 @@ export function Player() {
   useEffect(() => {
     const characterController = world.createCharacterController(0.0001);
     controllerRef.current = characterController as any;
-    console.log(shipModel.scene)
 
     clock.start();
 

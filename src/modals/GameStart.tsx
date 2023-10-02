@@ -43,8 +43,14 @@ export function GameStartModal({ start }: GameStartModalProps) {
                 <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <div className="mt-2">
                     <p className="text-md text-gray-500 text-center">
-                    게임을 시작하려면 아래 버튼을 누르세요!
+                    소행성 지대를 무사히 탈출하세요!
+                    ________________________
                     </p>
+                    <p className="text-md text-gray-500 text-center">조작 방법</p>
+                    <p className="text-md text-gray-500 text-center">위: A 혹은 ⬆</p>
+                    <p className="text-md text-gray-500 text-center">아래: S 혹은 ⬇</p>
+                    <p className="text-md text-gray-500 text-center">왼쪽: D 혹은 ⬅</p>
+                    <p className="text-md text-gray-500 text-center">오른쪽: F 혹은 ➡</p>
                   </div>
 
                   <div className="mt-4 text-center">
