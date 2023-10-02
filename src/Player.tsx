@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber';
 
 export function Player() {
@@ -10,6 +10,7 @@ export function Player() {
   const exhaustRef1 = useRef<THREE.Mesh>(null!);
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
 
+  // Ship Animation
   useFrame((state, delta) => {
     const cameraPosition = new THREE.Vector3();
     cameraPosition.copy(shipRef.current.position);
@@ -27,6 +28,63 @@ export function Player() {
     exhaustRef1.current.scale.y = scale1;
     exhaustRef2.current.scale.x = scale2;
     exhaustRef2.current.scale.y = scale2;
+  });
+
+  // Key Mapping
+  const [_, getKeys] = useKeyboardControls();
+  useFrame((_, delta) => {
+    const ship = shipRef.current;
+    const { forward, backward, left, right } = getKeys();
+
+    const force = new THREE.Vector3(0, 0, 0);
+    const rotation = new THREE.Quaternion(0, 0, 0);
+    const distance = delta * 10;
+
+    switch (true) {
+      case forward: {
+        force.y += distance;
+        const rotate = ship.rotation.x + (Math.PI * delta);
+        if (Math.abs(rotate) < Math.PI * 0.25) {
+          ship.rotation.x = rotate;
+        }
+        break;
+      } case backward: {
+        force.y -= distance;
+        const rotate = ship.rotation.x + (Math.PI * -delta);
+        if (Math.abs(rotate) < Math.PI * 0.25) {
+          ship.rotation.x = rotate;
+        }
+        break;
+      } case left: {
+        force.x -= distance;
+        const rotate = ship.rotation.z + (Math.PI * delta);
+        if (Math.abs(rotate) < Math.PI * 0.25) {
+          ship.rotation.z = rotate;
+        }
+        break;
+      } case right: {
+        force.x += distance;
+        const rotate = ship.rotation.z + (Math.PI * -delta);
+        if (Math.abs(rotate) < Math.PI * 0.25) {
+          ship.rotation.z = rotate;
+        }
+        break;
+      } default:
+        if (ship.rotation.z < -delta) {
+          ship.rotation.z += Math.PI * delta;
+        } else if (ship.rotation.z > delta) {
+          ship.rotation.z -= Math.PI * delta;
+        }
+
+        if (ship.rotation.x < -delta) {
+          ship.rotation.x += Math.PI * delta;
+        } else if (ship.rotation.x > delta) {
+          ship.rotation.x -= Math.PI * delta;
+        }
+        break;
+    }
+
+    ship.position.add(force);
   });
 
   return (
