@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@dimforge/rapier3d": "^0.11.2",
+    "@headlessui/react": "^1.7.17",
     "@react-three/drei": "^9.86.3",
     "@react-three/fiber": "^8.14.3",
     "@react-three/rapier": "^1.1.1",
@@ -27,10 +28,13 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react-swc": "^3.3.2",
+    "autoprefixer": "^10.4.16",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.31",
     "r3f-perf": "^7.1.2",
+    "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
