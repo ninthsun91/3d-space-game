@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useStatusStore } from '../store'
+import { useHistoryStore } from '../store/historyStore';
 
 type GameOverModalProps = {
   restart: () => void;
@@ -8,15 +9,20 @@ type GameOverModalProps = {
 
 export function GameOverModal({ restart }: GameOverModalProps) {
   const { isGameOver, elapsedTime, init } = useStatusStore();
+  const { history, pushHistory } = useHistoryStore();
   const [isOpen, setIsOpen] = useState<boolean>(isGameOver);
 
   const closeModal = () => {
     setIsOpen(false);
+    pushHistory(elapsedTime);
     init();
     restart();
   }
 
   useEffect(() => setIsOpen(isGameOver), [isGameOver]);
+
+  const currentRecord = elapsedTime.toFixed(2);
+  const bestRecord = [...history, elapsedTime].sort((a, b) => b - a)[0].toFixed(2);
 
   return (
     <>
@@ -54,7 +60,10 @@ export function GameOverModal({ restart }: GameOverModalProps) {
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      생존 시간: {elapsedTime.toFixed(2)}초
+                      현재 기록: {currentRecord}초
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      최고 기록: {bestRecord}초
                     </p>
                   </div>
 
