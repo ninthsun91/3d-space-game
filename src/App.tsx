@@ -8,6 +8,7 @@ import { Lights } from './Lights';
 import { Stars } from './Stars';
 import { Lane } from './Lane';
 import { Player } from './Player';
+import { Physics } from '@react-three/rapier';
 
 function App() {
 
@@ -30,9 +31,11 @@ function App() {
         <Lights />
 
         <Stars />
-        <Lane />
+        <Physics debug>
+          <Lane />
 
-        <Player />
+          <Player />
+        </Physics>
       </Canvas>
     </KeyboardControls>
   )
