@@ -2,13 +2,10 @@ import './App.css'
 import {} from 'react'
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei';
+import { Physics } from '@react-three/rapier';
 import { Perf }  from 'r3f-perf';
 
-import { Lights } from './Lights';
-import { Stars } from './Stars';
-import { Lane } from './Lane';
-import { Player } from './Player';
-import { Physics } from '@react-three/rapier';
+import { Lane, Lights, Player, Stars } from './three';
 
 function App() {
 
