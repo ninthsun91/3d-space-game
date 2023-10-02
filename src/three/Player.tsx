@@ -36,9 +36,11 @@ export function Player() {
 
     const cameraPosition = new THREE.Vector3();
     cameraPosition.copy(shipPosition);
-    cameraPosition.z += 10;
-    cameraPosition.y += 5;
+    cameraPosition.z += 5;
+    cameraPosition.y += 4;
     state.camera.position.copy(cameraPosition);
+
+    shipPosition.z -= 5;
     state.camera.lookAt(shipPosition);
 
     setCameraPosition(cameraPosition);
