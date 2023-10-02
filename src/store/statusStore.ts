@@ -25,6 +25,7 @@ interface StatusStore extends StatusState {
   setShipPosition: (position: THREE.Vector3) => void;
   setCameraPosition: (position: THREE.Vector3) => void;
   setGameOver: (elapsedTime: number, position: THREE.Vector3) => void;
+  init: () => void;
 }
 
 const statusStoreInit: StatusState = {
@@ -74,4 +75,7 @@ export const useStatusStore = create<StatusStore>((set) => ({
       distance: Math.sqrt(x**2 + y**2 + z**2),
     }
   }),
+  init: () => set(() => ({
+    ...statusStoreInit,
+  })),
 }));

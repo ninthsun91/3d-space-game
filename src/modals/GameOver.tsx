@@ -2,12 +2,18 @@ import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useStatusStore } from '../store'
 
-export function GameOverModal() {
-  const { isGameOver, elapsedTime } = useStatusStore();
+type GameOverModalProps = {
+  restart: () => void;
+}
+
+export function GameOverModal({ restart }: GameOverModalProps) {
+  const { isGameOver, elapsedTime, init } = useStatusStore();
   const [isOpen, setIsOpen] = useState(isGameOver);
 
   function closeModal() {
-    setIsOpen(false)
+    setIsOpen(false);
+    init();
+    restart();
   }
 
   useEffect(() => setIsOpen(isGameOver), [isGameOver]);

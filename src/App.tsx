@@ -3,14 +3,18 @@ import { Game } from './Game';
 import { GameOverModal } from './modals';
 
 function App() {
-  // TODO: Add game start modal
-  // const [start, setStart] = useState();
+  const [start, setStart] = useState(true);
+
+  const restart = () => {
+    setStart(false);
+    setTimeout(() => setStart(true), 100);
+  }
 
   return (
     <>
-      <GameOverModal />
+      <GameOverModal restart={restart} />
 
-      <Game />
+      {start && <Game />}
     </>
   )
 }
