@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { OrbitControls, useGLTF, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber';
-import { CuboidCollider, RapierRigidBody, RigidBody, useRapier } from '@react-three/rapier';
+import { CollisionEnterPayload, CuboidCollider, RapierRigidBody, RigidBody, useRapier } from '@react-three/rapier';
 import { KinematicCharacterController } from '@dimforge/rapier3d';
 import { useShipStore } from '../store';
 
@@ -64,8 +64,8 @@ export function Player() {
 
     const { forward, backward, left, right } = getKeys();
 
-    // const translation = new THREE.Vector3(...shipPosition);
-    const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
+    const translation = new THREE.Vector3(...shipPosition);
+    // const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
     const distance = delta * 10;
     const degree = Math.PI * delta;
 
@@ -134,6 +134,13 @@ export function Player() {
     }
   }, []);
 
+  const onCollisionEnter = (collision: CollisionEnterPayload) => {
+    const name = collision.colliderObject?.name;
+    if (name === 'rock') {
+      console.log('GAME OVER');
+    }
+  }
+
   return (
     <>
       <OrbitControls />
@@ -141,8 +148,7 @@ export function Player() {
       <RigidBody ref={shipRef}
         type="kinematicPosition"
         colliders={false}
-        onCollisionEnter={() => console.log('collision')}
-        onIntersectionEnter={() => console.log('intersection')}
+        onCollisionEnter={onCollisionEnter}
       >
         <CuboidCollider args={[2, 2, 2]} />
         <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
