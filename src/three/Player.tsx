@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { OrbitControls, useGLTF, useKeyboardControls } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber';
 import { CollisionEnterPayload, CuboidCollider, RapierRigidBody, RigidBody, useRapier } from '@react-three/rapier';
@@ -24,6 +24,9 @@ export function Player() {
   const exhaustRef1 = useRef<THREE.Mesh>(null!);
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
   const controllerRef = useRef<KinematicCharacterController>(null!);
+
+  const [thrustSound] = useState(() => new Audio('/thrust.wav'));
+  const [crashSound] = useState(() => new Audio('/crash.wav'));
 
   const { isGameOver, setShipPosition, setCameraPosition, setGameOver } = useStatusStore();
   const { world } = useRapier();
@@ -137,6 +140,11 @@ export function Player() {
   useEffect(() => {
     const characterController = world.createCharacterController(0.0001);
     controllerRef.current = characterController as any;
+
+    crashSound.volume = 0.3;
+    thrustSound.loop = true;
+    thrustSound.volume = 0.05;
+    thrustSound.play();
     
     return () => {
       world.removeCharacterController(characterController);
@@ -146,7 +154,9 @@ export function Player() {
   const onCollisionEnter = (collision: CollisionEnterPayload) => {
     const name = collision.colliderObject?.name;
     if (name === 'rock') {
-      console.log('GAME OVER');
+      thrustSound.pause();
+      crashSound.play();
+
       const elapsedTime = clock.getElapsedTime();
       const position = getShipPosition(shipRef.current);
       setGameOver(elapsedTime, position);
