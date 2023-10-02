@@ -141,6 +141,7 @@ export function Player() {
   useEffect(() => {
     const characterController = world.createCharacterController(0.0001);
     controllerRef.current = characterController as any;
+    console.log(shipModel.scene)
 
     clock.start();
 
@@ -175,7 +176,8 @@ export function Player() {
         colliders={false}
         onCollisionEnter={onCollisionEnter}
       >
-        <CuboidCollider args={[1.5, 1.5, 1.5]} />
+        <CuboidCollider args={[1, 1, 2]} />
+        <CuboidCollider args={[5, 0.2, 1]} />
         <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
 
         <group>
