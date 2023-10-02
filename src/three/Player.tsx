@@ -69,12 +69,12 @@ export function Player() {
     }
 
     const rotation = ship.rotation();
-    const speed = INITIAL_SPEED + (state.clock.elapsedTime * 0.001);
+    const speed = INITIAL_SPEED + (state.clock.elapsedTime * 0.01);
 
     const { forward, backward, left, right } = getKeys();
 
-    const translation = new THREE.Vector3(...shipPosition);
-    // const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
+    // const translation = new THREE.Vector3(...shipPosition);
+    const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
     const distance = delta * 10;
     const degree = Math.PI * delta;
 

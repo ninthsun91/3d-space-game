@@ -10,7 +10,7 @@ declare module '@react-three/fiber' {
 }
 
 const laneGeometry = new THREE.PlaneGeometry(0.1, 2);
-const laneMaterial = new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide, emissive: 'white', emissiveIntensity: 1 });
+const laneMaterial = new THREE.MeshStandardMaterial({ color: 'yellow', side: THREE.DoubleSide, emissive: 'yellow', emissiveIntensity: 1 });
 
 const LANE_COUNT = 1330;
 

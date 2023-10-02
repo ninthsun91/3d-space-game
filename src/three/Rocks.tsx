@@ -8,7 +8,7 @@ type RockModel = ReturnType<typeof useGLTF<string>> & {
   materials: Record<string, THREE.MeshStandardMaterial>;
 }
 
-const ROCK_COUNTS = 200;
+const ROCK_COUNTS = 1000;
 
 export function Rocks() {
   const { nodes, materials } = useGLTF('rock.gltf') as RockModel;
@@ -24,9 +24,9 @@ type RockProps = {
 }
 
 const randomRockPosition = (): [number, number, number] => {
-  const MAX_X = 50;
-  const MAX_Y = 50;
-  const MAX_Z = -200;
+  const MAX_X = 80;
+  const MAX_Y = 80;
+  const MAX_Z = -1000;
   const x = (Math.random() - 0.5) * MAX_X;
   const y = (Math.random() - 0.5) * MAX_Y;
   const z = Math.random() * MAX_Z - 20;
@@ -38,7 +38,7 @@ const Rock = memo(({ nodes, materials }: RockProps) => {
   
   useEffect(() => {
     const rock = rockRef.current;
-    const speed = Math.random() * 50;
+    const speed = Math.random() * 20;
     rock.addForce(new THREE.Vector3(0, 0, speed), true);
     rock.addTorque(new THREE.Vector3(Math.random(), Math.random(), Math.random()), true);
   }, []);

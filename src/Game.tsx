@@ -30,7 +30,7 @@ export function Game() {
         <Lane />
 
         <Physics
-          debug
+          // debug
           gravity={[ 0, 0, 0 ]}
         >
           <Walls />
