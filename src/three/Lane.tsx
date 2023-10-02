@@ -10,7 +10,7 @@ declare module '@react-three/fiber' {
 }
 
 const laneGeometry = new THREE.PlaneGeometry(0.1, 2);
-const laneMaterial = new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide });
+const laneMaterial = new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide, emissive: 'white', emissiveIntensity: 1 });
 
 const LANE_COUNT = 100;
 
@@ -23,7 +23,7 @@ export function Lane() {
 
       const matrix = new THREE.Matrix4();
       matrix.compose(
-        new THREE.Vector3(isLeft ? -10 : 10, -0.5, -3 * order),
+        new THREE.Vector3(isLeft ? -15 : 15, -0.5, -3 * order),
         // new THREE.Quaternion(),
         new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI * -0.5, 0, 0)),
         new THREE.Vector3(1, 1, 1),

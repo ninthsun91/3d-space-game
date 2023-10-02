@@ -5,7 +5,7 @@ import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { Perf }  from 'r3f-perf';
 
-import { Lane, Lights, Player, Stars, Wall } from './three';
+import { Lane, Lights, Player, Stars, Walls } from './three';
 
 function App() {
 
@@ -34,7 +34,7 @@ function App() {
           debug
           gravity={[ 0, 0, 0 ]}
         >
-          <Wall />
+          <Walls />
 
           <Player />
         </Physics>
