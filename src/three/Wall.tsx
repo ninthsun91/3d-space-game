@@ -1,6 +1,6 @@
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 
-const WIDTH = 50
+const WIDTH = 30
 const LENGTH = 1000;
 
 type Props = {

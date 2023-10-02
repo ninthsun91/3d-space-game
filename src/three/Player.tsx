@@ -64,8 +64,8 @@ export function Player() {
 
     const { forward, backward, left, right } = getKeys();
 
-    const translation = new THREE.Vector3(...shipPosition);
-    // const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
+    // const translation = new THREE.Vector3(...shipPosition);
+    const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
     const distance = delta * 10;
     const degree = Math.PI * delta;
 
@@ -114,7 +114,7 @@ export function Player() {
       translation,
     );
     const collision = controller.computedCollision(0);
-    if (collision && collision.toi < 1) {
+    if (collision && collision.toi === 0) {
       translation.copy(shipPosition);
     }
 
@@ -144,7 +144,7 @@ export function Player() {
         onCollisionEnter={() => console.log('collision')}
         onIntersectionEnter={() => console.log('intersection')}
       >
-        <CuboidCollider args={[1, 1, 1]} />
+        <CuboidCollider args={[2, 2, 2]} />
         <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
 
         <group>
