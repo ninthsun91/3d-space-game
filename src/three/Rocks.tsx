@@ -1,47 +1,17 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useGLTF, useMatcapTexture } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
-
-type InstanceProps = {
-  key: string;
-  position: [number, number, number];
-  rotation: [number, number, number];
-  scale: number;
-}
 
 type RockModel = ReturnType<typeof useGLTF<string>> & {
   nodes: Record<string, THREE.Mesh>;
   materials: Record<string, THREE.MeshStandardMaterial>;
 }
 
-const ROCK_COUNTS = 100;
+const ROCK_COUNTS = 200;
 
 export function Rocks() {
-  const rockModel = useGLTF('rock.gltf') as RockModel;
-  console.log('rock', rockModel);
-  const { nodes, materials } = rockModel;
-
-  const [matcap] = useMatcapTexture('908E8E_292828_454444_595757', 256);
-  useEffect(() => {
-    matcap.colorSpace = THREE.SRGBColorSpace;
-    matcap.needsUpdate = true;
-  }, []);
-
-  const instances = useMemo(() => {
-    const instances = Array<InstanceProps>();
-    for (let i = 0; i < ROCK_COUNTS; i++) {
-      instances.push({
-        key: `rock-${i}`,
-        position: randomRockPosition(),
-        rotation: [ 0, 0, 0 ],
-        scale: Math.random() * 5 + 5,
-      });
-    }
-
-    return instances;
-  }, []);
+  const { nodes, materials } = useGLTF('rock.gltf') as RockModel;
 
   return Array(ROCK_COUNTS).fill(0).map((_, i) => (
     <Rock key={`rock-${i}`} nodes={nodes} materials={materials} />
@@ -51,7 +21,6 @@ export function Rocks() {
 type RockProps = {
   nodes: RockModel['nodes'],
   materials: RockModel['materials'],
-  // data: any,
 }
 
 const randomRockPosition = (): [number, number, number] => {
@@ -67,25 +36,20 @@ const randomRockPosition = (): [number, number, number] => {
 const Rock = memo(({ nodes, materials }: RockProps) => {
   const rockRef = useRef<RapierRigidBody>(null!);
   
-  useFrame((state) => {
-    const rock = rockRef.current;
-  });
-  
   useEffect(() => {
     const rock = rockRef.current;
-    const force = new THREE.Vector3(
-      0,
-      0,
-      Math.random() * 50,
-    );
-    rock.addForce(force, true);
+    const speed = Math.random() * 50;
+    rock.addForce(new THREE.Vector3(0, 0, speed), true);
+    rock.addTorque(new THREE.Vector3(Math.random(), Math.random(), Math.random()), true);
   }, []);
 
   return (
     <RigidBody ref={rockRef}
       position={randomRockPosition()}
-      scale={Math.random() * 5 + 5}
+      rotation={[Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI]}
+      scale={Math.random() * 5 + 2}
       colliders="hull"
+      name="rock"
     >
       <mesh
         geometry={nodes.node_id4_Material_52_0.geometry}
