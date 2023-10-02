@@ -4,7 +4,7 @@ import { OrbitControls, useGLTF, useKeyboardControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber';
 import { CollisionEnterPayload, CuboidCollider, RapierRigidBody, RigidBody, useRapier } from '@react-three/rapier';
 import { KinematicCharacterController } from '@dimforge/rapier3d';
-import { useShipStore } from '../store';
+import { useStatusStore } from '../store';
 
 const shouldRotate = (rotate: number) => {
   return Math.abs(rotate) < Math.PI * 0.1;
@@ -25,7 +25,7 @@ export function Player() {
   const exhaustRef2 = useRef<THREE.Mesh>(null!);
   const controllerRef = useRef<KinematicCharacterController>(null!);
 
-  const { setShipPosition, setCameraPosition } = useShipStore();
+  const { setShipPosition, setCameraPosition } = useStatusStore();
   const { world } = useRapier();
 
   // Camera

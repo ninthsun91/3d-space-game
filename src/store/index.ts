@@ -1,1 +1,1 @@
-export * from './shipStore';
+export * from './statusStore';

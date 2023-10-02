@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { create } from 'zustand';
 
-type ShipState = {
+type StatusState = {
   ship: {
     position: {
       x: number;
@@ -18,12 +18,12 @@ type ShipState = {
   }
 }
 
-interface ShipStore extends ShipState {
+interface StatusStore extends StatusState {
   setShipPosition: (position: THREE.Vector3) => void;
   setCameraPosition: (position: THREE.Vector3) => void;
 }
 
-const shipStoreInit: ShipState = {
+const statusStoreInit: StatusState = {
   ship: {
     position: {
       x: 0,
@@ -40,8 +40,8 @@ const shipStoreInit: ShipState = {
   } 
 }
 
-export const useShipStore = create<ShipStore>((set) => ({
-  ...shipStoreInit,
+export const useStatusStore = create<StatusStore>((set) => ({
+  ...statusStoreInit,
   setShipPosition: (position: THREE.Vector3) => set(() => ({
     ship: {
       position: {
