@@ -79,7 +79,7 @@ export function Player() {
 
     // const translation = new THREE.Vector3(...shipPosition);
     const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
-    const distance = delta * 10;
+    const distance = delta * 20;
     const degree = Math.PI * delta;
 
     switch (true) {
