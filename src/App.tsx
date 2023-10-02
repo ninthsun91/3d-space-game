@@ -5,7 +5,7 @@ import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { Perf }  from 'r3f-perf';
 
-import { Lane, Lights, Player, Stars, Walls } from './three';
+import { Lane, Lights, Player, Rocks, Stars, Walls } from './three';
 
 function App() {
 
@@ -37,6 +37,7 @@ function App() {
           <Walls />
 
           <Player />
+          <Rocks />
         </Physics>
       </Canvas>
     </KeyboardControls>
