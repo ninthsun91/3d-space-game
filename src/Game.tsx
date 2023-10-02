@@ -5,20 +5,17 @@ import { Physics } from '@react-three/rapier';
 // import { Perf }  from 'r3f-perf';
 
 import { Lane, Lights, Player, Rocks, Stars, Walls } from './three';
-import { useStatusStore } from './store';
 
 type GameProps = {
   start: boolean;
 }
 
 export function Game({ start }: GameProps) {
-  const { init } = useStatusStore();
   const [bgm] = useState(() => new Audio('/space.wav'));
   
   useEffect(() => {
     if (start) {
       bgm.play();
-      init();
     } else {
       bgm.pause();
     }
@@ -47,7 +44,6 @@ export function Game({ start }: GameProps) {
           lookAt: () => [ 0, 0, -50 ],
         }}
       >
-        {/* <Perf debug /> */}
         <Lights />
 
         <Stars />

@@ -68,6 +68,7 @@ export function Player() {
 
     if (isGameOver) {
       ship.setNextKinematicTranslation(shipPosition);
+      state.clock.stop();
       return;
     }
 
@@ -141,6 +142,8 @@ export function Player() {
     const characterController = world.createCharacterController(0.0001);
     controllerRef.current = characterController as any;
 
+    clock.start();
+
     crashSound.volume = 0.3;
     thrustSound.loop = true;
     thrustSound.volume = 0.05;
@@ -153,7 +156,7 @@ export function Player() {
 
   const onCollisionEnter = (collision: CollisionEnterPayload) => {
     const name = collision.colliderObject?.name;
-    if (name === 'rock') {
+    if (name === 'rock' && !isGameOver) {
       thrustSound.pause();
       crashSound.play();
 
@@ -172,7 +175,7 @@ export function Player() {
         colliders={false}
         onCollisionEnter={onCollisionEnter}
       >
-        <CuboidCollider args={[2, 2, 2]} />
+        <CuboidCollider args={[1.5, 1.5, 1.5]} />
         <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
 
         <group>
