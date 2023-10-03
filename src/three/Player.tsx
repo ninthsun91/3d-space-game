@@ -176,7 +176,7 @@ export function Player() {
         onCollisionEnter={onCollisionEnter}
       >
         <CuboidCollider args={[1, 1, 2]} />
-        <CuboidCollider args={[5, 0.2, 1]} />
+        <CuboidCollider args={[4, 0.2, 1]} />
         <primitive object={shipModel.scene} position={[0, 0, 0]} rotation={[ 0, Math.PI, 0 ]} />
 
         <group>
