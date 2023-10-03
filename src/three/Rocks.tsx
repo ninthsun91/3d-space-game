@@ -3,13 +3,11 @@ import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 
-type RockModel = ReturnType<typeof useGLTF<string>> & {
-  nodes: Record<string, THREE.Mesh>;
-  materials: Record<string, THREE.MeshStandardMaterial>;
-}
-
 const ROCK_COUNTS = 3000;
 
+/**
+ * Create rocks
+ */
 export function Rocks() {
   const { nodes, materials } = useGLTF('rock.gltf') as RockModel;
 
@@ -25,19 +23,15 @@ type RockProps = {
   materials: RockModel['materials'],
 }
 
-const randomRockPosition = (): [number, number, number] => {
-  const MAX_X = 100;
-  const MAX_Y = 100;
-  const MAX_Z = -1200;
-  const x = (Math.random() - 0.5) * MAX_X;
-  const y = (Math.random() - 0.5) * MAX_Y;
-  const z = Math.random() * MAX_Z - 20;
-  return [ x, y, z ];
-}
-
+/**
+ * Memo each rock to preserve movements
+ */
 const Rock = memo(({ nodes, materials }: RockProps) => {
   const rockRef = useRef<RapierRigidBody>(null!);
   
+  /**
+   * Set random speed and torque to each rock
+   */
   useEffect(() => {
     const rock = rockRef.current;
     const speed = Math.random() * 20;
@@ -60,3 +54,22 @@ const Rock = memo(({ nodes, materials }: RockProps) => {
     </RigidBody>
   )
 });
+
+const randomRockPosition = (): [number, number, number] => {
+  /**
+   * set random rock position
+   * MAX_X, MAX_Y, MAX_Z should be greater than flyable field range
+   */
+  const MAX_X = 100;
+  const MAX_Y = 100;
+  const MAX_Z = -1200;
+  const x = (Math.random() - 0.5) * MAX_X;
+  const y = (Math.random() - 0.5) * MAX_Y;
+  const z = Math.random() * MAX_Z - 20;
+  return [ x, y, z ];
+}
+
+type RockModel = ReturnType<typeof useGLTF<string>> & {
+  nodes: Record<string, THREE.Mesh>;
+  materials: Record<string, THREE.MeshStandardMaterial>;
+}

@@ -1,6 +1,10 @@
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 
-const WIDTH = 30
+/**
+ * WIDTH: width and height of the flyable field
+ * LENGTH: length of the flyable field
+ */
+const WIDTH = 30;
 const LENGTH = 1000;
 
 type Props = {
@@ -8,6 +12,9 @@ type Props = {
   rotation: [number, number, number];
 };
 
+/**
+ * Create invisible walls
+ */
 export function Walls() {
   return (
     <>

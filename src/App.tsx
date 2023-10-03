@@ -5,6 +5,10 @@ import { GameOverModal, GameStartModal } from './modals';
 function App() {
   const [start, setStart] = useState(false);
 
+  /**
+   * Start / Restart the game.
+   * Ensures the user interacts the document first
+   */
   const restart = () => {
     setStart(false);
     setTimeout(() => setStart(true), 100);

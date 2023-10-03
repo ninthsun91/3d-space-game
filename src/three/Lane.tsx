@@ -9,13 +9,24 @@ declare module '@react-three/fiber' {
   }
 }
 
-const laneGeometry = new THREE.PlaneGeometry(0.1, 2);
-const laneMaterial = new THREE.MeshStandardMaterial({ color: 'yellow', side: THREE.DoubleSide, emissive: 'yellow', emissiveIntensity: 1 });
-
 const LANE_COUNT = 1330;
+const laneGeometry = new THREE.PlaneGeometry(0.1, 2);
+const laneMaterial = new THREE.MeshStandardMaterial({
+  color: 'yellow',
+  emissive: 'yellow',
+  emissiveIntensity: 1,
+  side: THREE.DoubleSide,
+});
 
+/**
+ * Create track guide lanes
+ */
 export function Lane() {
   const lanes = useRef<THREE.InstancedMesh>(null!);
+
+  /**
+   * Set the position of each lane
+   */
   useEffect(() => {
     for (let i = 0; i < LANE_COUNT; i++) {
       const isLeft = i % 2 === 0;
@@ -24,7 +35,6 @@ export function Lane() {
       const matrix = new THREE.Matrix4();
       matrix.compose(
         new THREE.Vector3(isLeft ? -15 : 15, -0.5, -3 * order),
-        // new THREE.Quaternion(),
         new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI * -0.5, 0, 0)),
         new THREE.Vector3(1, 1, 1),
       );
@@ -35,6 +45,8 @@ export function Lane() {
   return (
     <>
       <instancedMesh ref={lanes} args={[ laneGeometry, laneMaterial, LANE_COUNT ]} >
+        {/* AreaLight for lane visibility, but turn off for now due to performance issue */}
+        {/* TODO: reuse created light object */}
         {/* <reactAreaLight
           attach="light"
           width={10}

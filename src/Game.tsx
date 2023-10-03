@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
-// import { Perf }  from 'r3f-perf';
+import { Perf }  from 'r3f-perf';
 
 import { Lane, Lights, Player, Rocks, Stars, Walls } from './three';
 
@@ -13,6 +13,9 @@ type GameProps = {
 export function Game({ start }: GameProps) {
   const [bgm] = useState(() => new Audio('/space.wav'));
   
+  /**
+   * Play / Pause the background music
+   */
   useEffect(() => {
     if (start) {
       bgm.play();
@@ -21,12 +24,19 @@ export function Game({ start }: GameProps) {
     }
   }, [start]);
   
+  /**
+   * Setup the background music
+   */
   useEffect(() => {
     bgm.loop = true;
     bgm.volume = 1;
   }, []);
 
   return (
+    /**
+     * Key Binding
+     * TODO: KeyD not working in Chrome
+     */
     <KeyboardControls
       map={[
         { name: 'forward', keys: [ 'KeyW', 'ArrowUp' ] },
@@ -35,6 +45,7 @@ export function Game({ start }: GameProps) {
         { name: 'right', keys: [ 'KeyD', 'ArrowRight' ] },
       ]}
     >
+      {/* All threejs objects must be in Canvas */}
       <Canvas
         camera={{
           fov: 105,
@@ -44,17 +55,20 @@ export function Game({ start }: GameProps) {
           lookAt: () => [ 0, 0, -50 ],
         }}
       >
+        <Perf />
         <Lights />
 
         <Stars />
         <Lane />
 
+        {/* All physical objects must be in Physics */}
         <Physics
           // debug
           gravity={[ 0, 0, 0 ]}
         >
           <Walls />
 
+          {/* Load components only when the game starts */}
           {start && <Player />}
           {start && <Rocks />}
         </Physics>

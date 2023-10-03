@@ -1,5 +1,8 @@
 import { useMemo } from 'react'
 
+/**
+ * Create background stars
+ */
 export function Stars({ count = 2000 }) {
   const positions = useMemo(() => {
     let positions = []

@@ -6,17 +6,14 @@ import { CollisionEnterPayload, CuboidCollider, RapierRigidBody, RigidBody, useR
 import { KinematicCharacterController } from '@dimforge/rapier3d';
 import { useStatusStore } from '../store';
 
-const shouldRotate = (rotate: number) => {
-  return Math.abs(rotate) < Math.PI * 0.1;
-}
-
-const getShipPosition = (ship: RapierRigidBody) => {
-  const { x, y, z } = ship.translation();
-  return new THREE.Vector3(x, y, z);
-}
-
+/**
+ * Initial speed of the ship
+ */
 const INITIAL_SPEED = 0.1;
 
+/**
+ * Create the player
+ */
 export function Player() {
   const shipModel = useGLTF('ship.gltf');
   
@@ -32,7 +29,9 @@ export function Player() {
   const { world } = useRapier();
   const { clock } = useThree();
 
-  // Camera
+  /**
+   * Set the camera position
+   */
   useFrame((state) => {
     const ship = shipRef.current;
     const shipPosition = getShipPosition(ship);
@@ -49,7 +48,9 @@ export function Player() {
     setCameraPosition(cameraPosition);
   });
   
-  // Exhaust animation
+  /**
+   * Thruster exhuast animation
+   */
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     const scale1 = 1 + Math.sin(time * 200);
@@ -60,12 +61,17 @@ export function Player() {
     exhaustRef2.current.scale.y = scale2;
   });
 
-  // Ship Movement
+  /**
+   * Key bind ship movement
+   */
   const [_, getKeys] = useKeyboardControls();
   useFrame((state, delta) => {
     const ship = shipRef.current;
     const shipPosition = getShipPosition(ship);
 
+    /**
+     * Stop the ship when game is over
+     */
     if (isGameOver) {
       ship.setNextKinematicTranslation(shipPosition);
       state.clock.stop();
@@ -77,11 +83,13 @@ export function Player() {
 
     const { forward, backward, left, right } = getKeys();
 
-    // const translation = new THREE.Vector3(...shipPosition);
     const translation = new THREE.Vector3(shipPosition.x, shipPosition.y, shipPosition.z - speed);
     const distance = delta * 20;
     const degree = Math.PI * delta;
 
+    /**
+     * Adjust translation and rotation based on key input
+     */
     switch (true) {
       case forward: {
         translation.y += distance;
@@ -112,6 +120,9 @@ export function Player() {
         }
         break;
       } default:
+        /**
+         * return to the original rotation if no key is pressed
+         */
         if (Math.abs(rotation.z) > delta * 1.1) {
           rotation.z -= Math.PI * delta * Math.sign(rotation.z);
         }
@@ -121,6 +132,9 @@ export function Player() {
         break;
     }
 
+    /**
+     * Compute collision
+     */
     const controller = controllerRef.current;
     controller.computeColliderMovement(
       ship.collider(0) as any,   // force type due to pnpm bug
@@ -131,13 +145,19 @@ export function Player() {
       translation.copy(shipPosition);
     }
 
+    /**
+     * Set the next position and rotation
+     */
     ship.setNextKinematicTranslation(translation);
     ship.setNextKinematicRotation(rotation);
 
     setShipPosition(getShipPosition(ship));
   });
 
-  // Initial Loading
+  /**
+   * Initial loading
+   * create character controller and setup sounds
+   */
   useEffect(() => {
     const characterController = world.createCharacterController(0.0001);
     controllerRef.current = characterController as any;
@@ -154,6 +174,10 @@ export function Player() {
     }
   }, []);
 
+  /**
+   * Collision handler
+   * game over when the ship collides with a rock
+   */
   const onCollisionEnter = (collision: CollisionEnterPayload) => {
     const name = collision.colliderObject?.name;
     if (name === 'rock' && !isGameOver) {
@@ -192,4 +216,19 @@ export function Player() {
       </RigidBody>
     </>
   );
+}
+
+/**
+ * Check if the ship has rotated too much
+ */
+const shouldRotate = (rotate: number) => {
+  return Math.abs(rotate) < Math.PI * 0.1;
+}
+
+/**
+ * Convert Rapier.Vector to THREE.Vector3
+ */
+const getShipPosition = (ship: RapierRigidBody) => {
+  const { x, y, z } = ship.translation();
+  return new THREE.Vector3(x, y, z);
 }

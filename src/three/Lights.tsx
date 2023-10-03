@@ -1,5 +1,10 @@
 type LightsProps = {}
 
+/**
+ * Create lights
+ * 
+ * TODO: Adjust shadow and make light to track the player
+ */
 export function Lights({}: LightsProps) {
   return (
     <>
