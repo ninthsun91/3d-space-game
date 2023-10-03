@@ -1,11 +1,11 @@
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
+import { FIELD_LENGTH, FIELD_WIDTH } from './const';
 
 /**
  * WIDTH: width and height of the flyable field
- * LENGTH: length of the flyable field
+ * FIELD_LENGTH: FIELD_LENGTH of the flyable field
  */
-const WIDTH = 30;
-const LENGTH = 100;
+const WIDTH = FIELD_WIDTH / 2;
 
 type Props = {
   position: [number, number, number];
@@ -18,10 +18,10 @@ type Props = {
 export function Walls() {
   return (
     <>
-      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, WIDTH, -LENGTH]} />
-      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, -WIDTH, -LENGTH]} />
-      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[WIDTH, 0, -LENGTH]} />
-      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[-WIDTH, 0, -LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, WIDTH, -FIELD_LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, 0, 0]} position={[0, -WIDTH, -FIELD_LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[WIDTH, 0, -FIELD_LENGTH]} />
+      <Wall rotation={[Math.PI * 0.5, Math.PI * 0.5, 0]} position={[-WIDTH, 0, -FIELD_LENGTH]} />
     </>
   );
 }
@@ -35,7 +35,7 @@ function Wall({ rotation, position }: Props) {
       rotation={rotation}
       position={position}
     >
-      <CuboidCollider args={[WIDTH, LENGTH, 0.01]} />
+      <CuboidCollider args={[WIDTH, FIELD_LENGTH, 0.01]} />
     </RigidBody>
   );
 }

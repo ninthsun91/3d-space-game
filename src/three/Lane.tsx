@@ -1,6 +1,7 @@
-import { Object3DNode, extend } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { Object3DNode, extend } from '@react-three/fiber';
+import { FIELD_LENGTH } from './const';
 
 extend({ ReactAreaLight: THREE.RectAreaLight });
 declare module '@react-three/fiber' {
@@ -9,7 +10,8 @@ declare module '@react-three/fiber' {
   }
 }
 
-const LANE_COUNT = 100;
+const LANE_LENGTH = 3;
+const LANE_COUNT = (FIELD_LENGTH / LANE_LENGTH) * 2;
 const laneGeometry = new THREE.PlaneGeometry(0.1, 2);
 const laneMaterial = new THREE.MeshStandardMaterial({
   color: 'yellow',

@@ -2,8 +2,9 @@ import { memo, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import { FIELD_LENGTH, FIELD_WIDTH } from './const';
 
-const ROCK_COUNTS = 300;
+const ROCK_COUNTS = 100;
 
 /**
  * Create rocks
@@ -57,15 +58,20 @@ const Rock = memo(({ nodes, materials }: RockProps) => {
 
 const randomRockPosition = (): [number, number, number] => {
   /**
+   * offset from the flyable field
+   */
+  const ROCK_OFFSET = 20;
+
+  /**
    * set random rock position
    * MAX_X, MAX_Y, MAX_Z should be greater than flyable field range
    */
-  const MAX_X = 100;
-  const MAX_Y = 100;
-  const MAX_Z = -120;
+  const MAX_X = FIELD_WIDTH + 20;
+  const MAX_Y = FIELD_WIDTH + 20;
+  const MAX_Z = (FIELD_LENGTH + ROCK_OFFSET) * -1;
   const x = (Math.random() - 0.5) * MAX_X;
   const y = (Math.random() - 0.5) * MAX_Y;
-  const z = Math.random() * MAX_Z - 20;
+  const z = (Math.random() * MAX_Z) - ROCK_OFFSET;
   return [ x, y, z ];
 }
 
