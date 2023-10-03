@@ -84,8 +84,8 @@ const randomRockPosition = (): [number, number, number] => {
    * set random rock position
    * MAX_X, MAX_Y, MAX_Z should be greater than flyable field range
    */
-  const MAX_X = FIELD_WIDTH + 40;
-  const MAX_Y = FIELD_WIDTH + 40;
+  const MAX_X = FIELD_WIDTH * 2;
+  const MAX_Y = FIELD_WIDTH * 2;
   const MAX_Z = (FIELD_LENGTH + ROCK_OFFSET) * -1;
   const x = (Math.random() - 0.5) * MAX_X;
   const y = (Math.random() - 0.5) * MAX_Y;
