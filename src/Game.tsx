@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
-import { Perf }  from 'r3f-perf';
+// import { Perf }  from 'r3f-perf';
 
-import { Field, Lane, Lights, Player, Rocks, Stars, Walls } from './three';
+import { Field, Lights, Player, Stars } from './three';
 
 type GameProps = {
   start: boolean;
@@ -55,7 +55,7 @@ export function Game({ start }: GameProps) {
           lookAt: () => [ 0, 0, -50 ],
         }}
       >
-        <Perf />
+        {/* <Perf /> */}
         <Lights />
         <Stars />
 
