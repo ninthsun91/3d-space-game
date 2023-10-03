@@ -31,6 +31,7 @@ type RockProps = {
 
 /**
  * Memo each rock to preserve movements
+ * Rerender rocks when the field has moved to the next position
  */
 const Rock = memo(({ nodes, materials }: RockProps) => {
   const rockRef = useRef<RapierRigidBody>(null!);
