@@ -4,7 +4,7 @@ import { KeyboardControls } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { Perf }  from 'r3f-perf';
 
-import { Lane, Lights, Player, Rocks, Stars, Walls } from './three';
+import { Field, Lane, Lights, Player, Rocks, Stars, Walls } from './three';
 
 type GameProps = {
   start: boolean;
@@ -57,20 +57,22 @@ export function Game({ start }: GameProps) {
       >
         <Perf />
         <Lights />
-
         <Stars />
-        <Lane />
 
         {/* All physical objects must be in Physics */}
         <Physics
           // debug
           gravity={[ 0, 0, 0 ]}
         >
-          <Walls />
+          {start && <>
+            <Field z={0} />
+            <Field z={-100} />
+            <Field z={-200} />
+            <Field z={-300} />
+            <Field z={-400} />
+          </>}
 
-          {/* Load components only when the game starts */}
           {start && <Player />}
-          {start && <Rocks />}
         </Physics>
       </Canvas>
     </KeyboardControls>

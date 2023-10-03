@@ -46,6 +46,7 @@ export function Player() {
     state.camera.lookAt(shipPosition);
 
     setCameraPosition(cameraPosition);
+    console.log(shipPosition.z);
   });
   
   /**

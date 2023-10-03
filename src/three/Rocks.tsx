@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 
-const ROCK_COUNTS = 3000;
+const ROCK_COUNTS = 300;
 
 /**
  * Create rocks
@@ -62,7 +62,7 @@ const randomRockPosition = (): [number, number, number] => {
    */
   const MAX_X = 100;
   const MAX_Y = 100;
-  const MAX_Z = -1200;
+  const MAX_Z = -120;
   const x = (Math.random() - 0.5) * MAX_X;
   const y = (Math.random() - 0.5) * MAX_Y;
   const z = Math.random() * MAX_Z - 20;

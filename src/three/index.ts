@@ -1,3 +1,4 @@
+export * from './Field';
 export * from './Lane';
 export * from './Lights';
 export * from './Player';

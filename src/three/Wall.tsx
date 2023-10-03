@@ -5,7 +5,7 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier';
  * LENGTH: length of the flyable field
  */
 const WIDTH = 30;
-const LENGTH = 1000;
+const LENGTH = 100;
 
 type Props = {
   position: [number, number, number];
