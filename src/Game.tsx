@@ -5,6 +5,7 @@ import { Physics } from '@react-three/rapier';
 // import { Perf }  from 'r3f-perf';
 
 import { Field, Lights, Player, Stars } from './three';
+import { Bloom, EffectComposer } from '@react-three/postprocessing';
 
 type GameProps = {
   start: boolean;
@@ -58,6 +59,10 @@ export function Game({ start }: GameProps) {
         {/* <Perf /> */}
         <Lights />
         <Stars />
+        <EffectComposer>
+          <Bloom />
+        </EffectComposer>
+        
 
         {/* All physical objects must be in Physics */}
         <Physics
