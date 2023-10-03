@@ -1,32 +1,44 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 import { FIELD_LENGTH, FIELD_WIDTH } from './const';
 
-const ROCK_COUNTS = 100;
+const ROCK_COUNTS = 50;
 
-type RocksProp = {
+type RocksProps = {
   rerender: number;
 }
 
 /**
  * Create rocks
  */
-export function Rocks({ rerender }: RocksProp) {
+export function Rocks({ rerender }: RocksProps) {
   const { nodes, materials } = useGLTF('rock.gltf') as RockModel;
+  const [rockCounts, setRockCounts] = useState<number>(ROCK_COUNTS + (rerender * 10));
 
-  return <>
-    {Array(ROCK_COUNTS).fill(0).map((_, i) => (
-      <Rock key={`rock-${i}`} nodes={nodes} materials={materials} rerender={rerender} />
-    ))}
-  </>
+  useEffect(() => {
+    setRockCounts(ROCK_COUNTS + (rerender * 10));
+  }, [rerender]);
+
+  return <CreateRocks key={`rocks_${rerender}`} nodes={nodes} materials={materials} rockCounts={rockCounts} />
 }
 
 type RockProps = {
   nodes: RockModel['nodes'],
   materials: RockModel['materials'],
-  rerender: number;
+  rockCounts: number;
+}
+
+/**
+ * Intermediate component to create rocks
+ */
+function CreateRocks({ nodes, materials, rockCounts }: RockProps) {
+  return <>
+    {Array(rockCounts).fill(0).map((_, i) => (
+      <Rock key={`rock-${i}`} nodes={nodes} materials={materials} rockCounts={rockCounts} />
+    ))}
+  </>
 }
 
 /**
@@ -60,7 +72,7 @@ const Rock = memo(({ nodes, materials }: RockProps) => {
       />
     </RigidBody>
   )
-}, (prev, next) => prev.rerender === next.rerender);
+});
 
 const randomRockPosition = (): [number, number, number] => {
   /**
@@ -72,8 +84,8 @@ const randomRockPosition = (): [number, number, number] => {
    * set random rock position
    * MAX_X, MAX_Y, MAX_Z should be greater than flyable field range
    */
-  const MAX_X = FIELD_WIDTH + 20;
-  const MAX_Y = FIELD_WIDTH + 20;
+  const MAX_X = FIELD_WIDTH + 40;
+  const MAX_Y = FIELD_WIDTH + 40;
   const MAX_Z = (FIELD_LENGTH + ROCK_OFFSET) * -1;
   const x = (Math.random() - 0.5) * MAX_X;
   const y = (Math.random() - 0.5) * MAX_Y;

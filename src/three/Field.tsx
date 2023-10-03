@@ -11,7 +11,7 @@ type FieldProps = {
  */
 export function Field({ z }: FieldProps) {
   const [blockStart, setBlockStart] = useState<number>(z);
-  const [rerender, setRerender] = useState<number>(0);
+  const [rerender, setRerender] = useState<number>(Math.abs(z) / 100);
 
   const { ship } = useStatusStore();
 
@@ -21,7 +21,7 @@ export function Field({ z }: FieldProps) {
    */
   if (ship.position.z < blockStart - 200) {
     setBlockStart(blockStart - 500);
-    setRerender(rerender + 1);
+    setRerender(rerender + 5);
   }
   
   return <group position={[ 0, 0, blockStart ]}>
