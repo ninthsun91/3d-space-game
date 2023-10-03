@@ -13,9 +13,11 @@ const ROCK_COUNTS = 3000;
 export function Rocks() {
   const { nodes, materials } = useGLTF('rock.gltf') as RockModel;
 
-  return Array(ROCK_COUNTS).fill(0).map((_, i) => (
-    <Rock key={`rock-${i}`} nodes={nodes} materials={materials} />
-  ));
+  return <>
+    {Array(ROCK_COUNTS).fill(0).map((_, i) => (
+      <Rock key={`rock-${i}`} nodes={nodes} materials={materials} />
+    ))}
+  </>
 }
 
 type RockProps = {
