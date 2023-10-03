@@ -6,15 +6,19 @@ import { FIELD_LENGTH, FIELD_WIDTH } from './const';
 
 const ROCK_COUNTS = 100;
 
+type RocksProp = {
+  rerender: number;
+}
+
 /**
  * Create rocks
  */
-export function Rocks() {
+export function Rocks({ rerender }: RocksProp) {
   const { nodes, materials } = useGLTF('rock.gltf') as RockModel;
 
   return <>
     {Array(ROCK_COUNTS).fill(0).map((_, i) => (
-      <Rock key={`rock-${i}`} nodes={nodes} materials={materials} />
+      <Rock key={`rock-${i}`} nodes={nodes} materials={materials} rerender={rerender} />
     ))}
   </>
 }
@@ -22,6 +26,7 @@ export function Rocks() {
 type RockProps = {
   nodes: RockModel['nodes'],
   materials: RockModel['materials'],
+  rerender: number;
 }
 
 /**
@@ -54,7 +59,7 @@ const Rock = memo(({ nodes, materials }: RockProps) => {
       />
     </RigidBody>
   )
-});
+}, (prev, next) => prev.rerender === next.rerender);
 
 const randomRockPosition = (): [number, number, number] => {
   /**
